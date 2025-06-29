@@ -9,6 +9,9 @@ const int SCREEN_HEIGHT = 600;
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+SDL_Rect obstacle = { 400, SCREEN_HEIGHT - 100, 50, 50 };
+SDL_Rect goal = { SCREEN_WIDTH, SCREEN_HEIGHT - 100, 50, 50 };
+
 
 struct Player 
 {
@@ -55,6 +58,25 @@ struct Player
             onGround = true;
         }
 
+
+		//colission with the obstacle then reset player position
+        if (SDL_HasIntersection(&rectangle, &obstacle)) {
+            std::cout << "GAME OVER: Udario si prepreku!\n";
+            rectangle.x = 100;
+            rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+            velocity_Y = 0;
+            onGround = true;
+        }
+
+		//colission with the goal
+        if(SDL_HasIntersection(&rectangle, &goal)) {
+            std::cout << "CILJ: Stigao si do cilja!\n";
+            rectangle.x = 100;
+            rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+            velocity_Y = 0;
+            onGround = true;
+		}
+
     }
 
     void draw(SDL_Renderer* renderer) {
@@ -68,6 +90,16 @@ void drawGround() {
     SDL_Rect ground = { 0, SCREEN_HEIGHT - 50, SCREEN_WIDTH, 50 };
     SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
     SDL_RenderFillRect(renderer, &ground);
+}
+
+void drawObstacle() {
+	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255); // red color for the obstacle
+    SDL_RenderFillRect(renderer, &obstacle);
+}
+
+void drawGoal() {
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // green color for the goal
+    SDL_RenderFillRect(renderer, &goal);
 }
 
 int main(int argc, char* argv[])
@@ -92,6 +124,8 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+
+	//-1 znaci da se koristi bilo koji renderer
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     Player player;
@@ -108,11 +142,15 @@ int main(int argc, char* argv[])
         }
 
         player.update(keystate);
+        std::cout << "Udaljenost: " << player.rectangle.x << "\r";
+
 
         SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
         SDL_RenderClear(renderer);
 
         drawGround();
+        drawObstacle();
+		//drawGoal();
         player.draw(renderer);
 
         SDL_RenderPresent(renderer);
