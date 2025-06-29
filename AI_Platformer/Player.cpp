@@ -1,0 +1,55 @@
+#include "Player.h"
+#include <iostream>
+
+const int SCREEN_HEIGHT = 600;
+
+void Player::init() {
+    rectangle.h = 50;
+    rectangle.w = 50;
+    rectangle.x = 100;
+    rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+    velocity_Y = 0;
+    onGround = true;
+}
+
+void Player::update(const Uint8* keystate, SDL_Rect& obstacle, SDL_Rect& goal) {
+    if (keystate[SDL_SCANCODE_LEFT])
+        rectangle.x -= 5;
+    if (keystate[SDL_SCANCODE_RIGHT])
+        rectangle.x += 5;
+
+    if (keystate[SDL_SCANCODE_SPACE] && onGround) {
+        velocity_Y -= 12;
+        onGround = false;
+    }
+
+    velocity_Y += 0.6f;
+    rectangle.y += static_cast<int>(velocity_Y);
+
+    if (rectangle.y + rectangle.h >= SCREEN_HEIGHT - 50) {
+        rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+        velocity_Y = 0;
+        onGround = true;
+    }
+
+    if (SDL_HasIntersection(&rectangle, &obstacle)) {
+        std::cout << "GAME OVER: Udario si prepreku!\n";
+        rectangle.x = 100;
+        rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+        velocity_Y = 0;
+        onGround = true;
+    }
+
+    if (SDL_HasIntersection(&rectangle, &goal)) {
+        std::cout << "CILJ: Stigao si do cilja!\n";
+        rectangle.x = 100;
+        rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+        velocity_Y = 0;
+        onGround = true;
+    }
+}
+
+void Player::draw(SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, 0, 200, 255, 255);
+    SDL_RenderFillRect(renderer, &rectangle);
+}

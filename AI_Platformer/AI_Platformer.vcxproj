@@ -127,6 +127,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI_Platformer.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="QAgent.cpp" />
+    <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="QAgent.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
