@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 
+
 struct Player {
     SDL_Rect rectangle;
     float velocity_Y;

@@ -2,6 +2,8 @@
 #include <iostream>
 
 const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 800;
+
 
 void Player::init() {
     rectangle.h = 50;
@@ -41,8 +43,10 @@ void Player::update(const Uint8* keystate, SDL_Rect& obstacle, SDL_Rect& goal) {
     }
 
     if (SDL_HasIntersection(&rectangle, &goal)) {
+		
         std::cout << "CILJ: Stigao si do cilja!\n";
-        rectangle.x = 100;
+		drawScene(); // Optionally draw the scene again
+        rectangle.x = 50;
         rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
         velocity_Y = 0;
         onGround = true;
@@ -53,3 +57,4 @@ void Player::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 200, 255, 255);
     SDL_RenderFillRect(renderer, &rectangle);
 }
+
