@@ -1,8 +1,10 @@
 #include "Player.h"
 #include <iostream>
+#include "World.h"
 
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_WIDTH = 800;
+bool Player::end = false;
 
 
 void Player::init() {
@@ -15,6 +17,7 @@ void Player::init() {
 }
 
 void Player::update(const Uint8* keystate, SDL_Rect& obstacle, SDL_Rect& goal) {
+	static int broj_scena = 3;
     if (keystate[SDL_SCANCODE_LEFT])
         rectangle.x -= 5;
     if (keystate[SDL_SCANCODE_RIGHT])
@@ -43,13 +46,21 @@ void Player::update(const Uint8* keystate, SDL_Rect& obstacle, SDL_Rect& goal) {
     }
 
     if (SDL_HasIntersection(&rectangle, &goal)) {
-		
-        std::cout << "CILJ: Stigao si do cilja!\n";
-		drawScene(); // Optionally draw the scene again
-        rectangle.x = 50;
-        rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
-        velocity_Y = 0;
-        onGround = true;
+        if (broj_scena > 0)
+        {
+            std::cout << "Idemo nova scena!\n";
+			kreirajPozicije((3 - broj_scena));
+            broj_scena--;
+            rectangle.x = 50;
+            rectangle.y = SCREEN_HEIGHT - rectangle.h - 50;
+            velocity_Y = 0;
+            onGround = true;
+        }
+        else {
+            std::cout << "KRAJ IGRE: Stigao si do kraja!\n";
+			Player::end = true;
+        }
+        
     }
 }
 

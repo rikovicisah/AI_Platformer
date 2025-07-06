@@ -1,4 +1,6 @@
 #include "World.h"
+#include <random>
+#include <iostream>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -20,4 +22,27 @@ void drawObstacle(SDL_Renderer* renderer) {
 void drawGoal(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &goal);
+}
+
+void drawScene(SDL_Renderer* renderer, bool end) {
+	//obstacle.x = rand() % (SCREEN_WIDTH - obstacle.w); // Randomize obstacle position between 0 and SCREEN_WIDTH - obstacle.w
+    if(end) drawGoal(renderer);
+    drawGround(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    drawObstacle(renderer);
+}
+
+void kreirajPozicije(int i) {
+    // Randomize the position of the obstacle and goal
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, SCREEN_WIDTH - obstacle.w);
+    obstacle.x = dis(gen);
+    
+    // Ensure goal is not too close to the obstacle
+    while (abs(goal.x - obstacle.x) < 100) {
+        goal.x = dis(gen);
+    }
+	std::clog << "Obstacle position: " << obstacle.x << ", Goal position: " << goal.x << std::endl;
+	scene_positions[i] = obstacle.x;
+
 }

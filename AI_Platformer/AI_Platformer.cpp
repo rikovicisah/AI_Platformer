@@ -5,6 +5,7 @@
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+int number_of_scenes = 2;
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
     while (running) {
         const Uint8* keystate = SDL_GetKeyboardState(NULL);
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
+            if (event.type == SDL_QUIT || Player::end)
                 running = false;
         }
 
@@ -48,11 +49,9 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
         SDL_RenderClear(renderer);
 
-        drawGround(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-        drawObstacle(renderer);
-        //drawGoal(renderer);
         player.draw(renderer);
-
+		//drawObstacle(renderer);
+		drawScene(renderer, Player::getEnd);  
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // ~60 FPS
     }

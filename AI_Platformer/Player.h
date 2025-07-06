@@ -3,6 +3,7 @@
 
 
 struct Player {
+
     SDL_Rect rectangle;
     float velocity_Y;
     bool onGround;
@@ -10,4 +11,7 @@ struct Player {
     void init();
     void update(const Uint8* keystate, SDL_Rect& obstacle, SDL_Rect& goal);
     void draw(SDL_Renderer* renderer);
+    public:
+		static bool end;
+        static bool getEnd() { return end; }
 };
